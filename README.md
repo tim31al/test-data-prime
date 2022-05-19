@@ -10,5 +10,8 @@ docker-compose exec -u app app composer install
 docker-compose exec -u app app php bin/app.php
 ```
 
-## Результат
+## Результат 100 000
 ![Screenshot](test.jpg)
+
+## Результат 1
+![Screenshot](test-one.jpg)
