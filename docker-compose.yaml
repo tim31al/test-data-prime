@@ -1,0 +1,39 @@
+version: "3.4"
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - data_test_data_prime:/var/lib/mysql
+
+  redis:
+    image: redis
+    container_name: ${REDIS_HOST}
+    working_dir: /data
+    volumes:
+      - redis_test_data_prime:/data
+
+  app:
+    image: altimofeev/php8.0-fpm
+    env_file:
+      - .env
+    working_dir: ${WORKDIR}
+    depends_on:
+      - db
+    volumes:
+      - ./:/data/localhost
+      - sock_test_data_prime:${SOCKET_DIR}
+
+volumes:
+  sock_test_data_prime:
+  data_test_data_prime:
+  redis_test_data_prime:
