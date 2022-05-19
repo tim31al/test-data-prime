@@ -3,7 +3,7 @@
 ## Запуск
 
 ``` 
-git clone my_dir
+git clone git@github.com:tim31al/test-data-prime.git my_dir
 cd my_dir
 docker-compose up -d
 docker-compose exec -u app app composer install
