@@ -15,7 +15,7 @@ class TestHelper
         return microtime(true);
     }
 
-    public static function getProcessedMessage(int $start, string $service, int $count): string
+    public static function getProcessedMessage(int $start, string $service, int $count, int $decimals = 4): string
     {
         $finish = microtime(true);
 
@@ -23,7 +23,7 @@ class TestHelper
             '%s service processed %d records in %s seconds%s',
             $service,
             $count,
-            number_format($finish - $start, 4),
+            number_format($finish - $start, $decimals),
             \PHP_EOL);
     }
 }

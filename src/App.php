@@ -18,6 +18,7 @@ use const PHP_EOL;
 class App
 {
     private const MAX_ITEMS = 100000;
+    private const ONE_ITEM_DECIMALS = 16;
 
     private MySqlTestModel $mySqlTestModel;
     private RedisTestModel $redisTestModel;
@@ -50,9 +51,19 @@ class App
 
         $this->runTest('Mysql', $this->mySqlTestModel, $data);
 
-        echo PHP_EOL, '********************', PHP_EOL;
+        $this->printSplitter();
 
         $this->runTest('Redis', $this->redisTestModel, $data);
+
+        $this->printSplitter();
+
+        $this->runTestOne('Mysql', $this->mySqlTestModel);
+
+        $this->printSplitter();
+
+        $this->runTestOne('Redis', $this->redisTestModel);
+
+        echo PHP_EOL;
     }
 
     public function setMaxItems(int $maxItems): self
@@ -60,6 +71,17 @@ class App
         $this->maxItems = $maxItems;
 
         return $this;
+    }
+
+    private function runTestOne(string $service, ModelInterface $model): void
+    {
+        $str = $this->getRandomString();
+        $count = 1;
+
+        echo $service.' add one record', PHP_EOL;
+        $start = TestHelper::getStart();
+        $model->add($count, $str);
+        echo TestHelper::getProcessedMessage($start, $service, $count, static::ONE_ITEM_DECIMALS);
     }
 
     private function runTest(string $serviceName, ModelInterface $model, string $data): void
@@ -80,5 +102,10 @@ class App
         $length = rand(500, 1000);
 
         return bin2hex(random_bytes($length));
+    }
+
+    private function printSplitter(): void
+    {
+        echo PHP_EOL, '********************', PHP_EOL;
     }
 }
