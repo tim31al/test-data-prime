@@ -11,7 +11,7 @@ docker-compose exec -u app app php bin/app.php
 ```
 
 ## Результат 100 000
-![Screenshot](test-one.jpg)
+![Screenshot](tes.jpg)
 
 ## Результат 1
 ![Screenshot](test-one.jpg)
