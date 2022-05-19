@@ -8,10 +8,9 @@
 
 namespace App\Model;
 
-use App\Model\Interfaces\ModelInterface;
 use Redis;
 
-class RedisTestModel extends AbstractModel implements ModelInterface
+class RedisTestModel extends AbstractModel
 {
     private const KEY_PREFIX = 'redis_test_entry:';
 

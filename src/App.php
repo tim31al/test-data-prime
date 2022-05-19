@@ -13,13 +13,20 @@ use App\Model\MySqlTestModel;
 use App\Model\RedisTestModel;
 use App\Utils\Config;
 use App\Utils\TestHelper;
+use const PHP_EOL;
 
 class App
 {
     private const MAX_ITEMS = 100000;
+
     private MySqlTestModel $mySqlTestModel;
     private RedisTestModel $redisTestModel;
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Exception
+     */
     public function __construct()
     {
         $container = Config::getContainer();
@@ -29,30 +36,39 @@ class App
         $this->mySqlTestModel->init();
     }
 
+    /**
+     * Запуск тестов.
+     */
     public function run(string $data = null): void
     {
         if (!$data) {
-            $length = rand(500, 1000);
-            $data = bin2hex(random_bytes($length));
+            $data = $this->getRandomString();
         }
 
-        echo 'Тест MySql', \PHP_EOL;
-        $start = TestHelper::getStart();
-        $this->runInsert($this->mySqlTestModel, $data);
-        echo TestHelper::getProcessedMessage($start, 'Mysql', static::MAX_ITEMS);
+        $this->runTest('Mysql', $this->mySqlTestModel, $data);
 
-        echo \PHP_EOL, '********************';
+        echo PHP_EOL, '********************', PHP_EOL;
 
-        echo 'Тест Redis', \PHP_EOL;
-        $start = TestHelper::getStart();
-        $this->runInsert($this->redisTestModel, $data);
-        echo TestHelper::getProcessedMessage($start, 'Redis', static::MAX_ITEMS);
+        $this->runTest('Redis', $this->redisTestModel, $data);
     }
 
-    private function runInsert(ModelInterface $model, string $data): void
+    private function runTest(string $serviceName, ModelInterface $model, string $data): void
     {
+        echo 'Тест '.$serviceName, PHP_EOL;
+
+        $start = TestHelper::getStart();
+
         foreach (range(0, static::MAX_ITEMS) as $keyNumber) {
             $model->add($keyNumber, $data);
         }
+
+        echo TestHelper::getProcessedMessage($start, $serviceName, static::MAX_ITEMS);
+    }
+
+    private function getRandomString(): string
+    {
+        $length = rand(500, 1000);
+
+        return bin2hex(random_bytes($length));
     }
 }

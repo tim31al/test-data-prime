@@ -9,9 +9,10 @@
 namespace App\Model;
 
 use App\Model\Exceptions\ModelDataLengthException;
+use App\Model\Interfaces\ModelInterface;
 use function mb_strlen;
 
-abstract class AbstractModel
+abstract class AbstractModel implements ModelInterface
 {
     protected string $keyPrefix;
     protected int $maxDataLength;
